@@ -1,0 +1,9 @@
+# Ignore everything under archive and datasets
+dataset/*
+.vscode/
+__archives/
+aml_config/
+scripts/hvd*
+aml-batchai.json
+.amlignore
+*/__pycache__

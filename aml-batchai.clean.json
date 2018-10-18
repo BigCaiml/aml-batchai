@@ -1,0 +1,91 @@
+{
+  "AMLConfig":{
+    "resource_group": "aml-sdk",
+    "location": "eastus",
+    "workspace": "myws",
+    "experimentation": "HD_TF_Exp"
+  },
+  "Credentials":{
+    "type": "sp_credentials",
+    "subscription_id": "...",
+    "sp_credentials":{
+      "aad_client_id": "...",  
+      "aad_secret": "...",
+      "aad_tenant": "..."
+    },
+    "userpass_credentials":{
+    }
+  },
+  "ClusterProperties":{
+    "cluster_name": "cluster-8g-lp",
+    "scaling":
+    {
+      "scaling_method" : "manual",
+      "manual":{
+        "target_node_count": 1
+      },
+      "auto_scale":{
+        "minimum_node_count" : 0,
+        "maximum_node_count" : 1
+      }
+    },
+    "vm_priority": "lowpriority",
+    "vm_size": "Standard_NC12"
+  },
+  "JobProperties":{
+    "jobNamePrefix": "job-1",
+    "nodeCount": 1,
+    "processCount": 2,
+    "estimator": {
+      "estimatorType": "tensorflow",
+      "script":"myscript.py",
+      "scriptPath":"./scripts",
+      "distributedBackEnd":"mpi",
+      "scriptArgsDict":{
+        "--pathin": "%%dataset/mydataset",
+        "--results": "%%outputs",
+        "--epochs":"10",
+        "--use_horovod":"--enable_remote_debug"
+      },
+      "pipPackages":[
+        "numpy",
+        "horovod",
+        "dicom-numpy==0.1.2",
+        "dicom==0.9.9.post1",
+        "scipy",
+        "pandas",
+        "ptvsd"
+      ]
+    }
+  },
+  "DataReferences":{
+    "localDirectoryBlob":[
+      {
+        "dataref_id" : "dataset",
+        "localDirectoryName": "./dataset/local/dataset",
+        "remoteMountPath": "mydataset",
+        "downloadToComputeNodeBeforeExecution" : "True",
+        "remoteBlobContainer" : "tfdatasetsblob",
+        "uploadContentBeforeRun" : "False",
+        "overwriteOnUpload" : "False",
+        "downloadContentAfterRun" : "False",
+        "storageAccountName": "...",
+        "storageAccountKey": "..."
+      }
+    ],
+    "localDirectoryFiles":[
+      {
+        "dataref_id" : "outputs",
+        "localDirectoryName": "./dataset/results",
+        "remoteMountPath": "outputs",
+        "downloadToComputeNodeBeforeExecution" : "False",
+        "remoteFileShare": "tfmodel",
+        "uploadContentBeforeRun" : "False",
+        "overwriteOnUpload" : "True",
+        "downloadContentAfterRun" : "True",
+        "storageAccountName": "...",
+        "storageAccountKey": "..."
+      }
+    ]
+  }
+}
