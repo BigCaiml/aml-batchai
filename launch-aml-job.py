@@ -40,7 +40,7 @@ def create_and_attach_blob_storage(cfg, ws):
                 log.info("Blob Container '%s' on storage account '%s' already existed.", ref.remoteBlobContainer, ref.storageAccountName)
             # Get most recent list of datastores linked to current workspace
             datastores = ws.datastores()
-            # Validate if blob_ds is created
+            # Validate if ds is created
             ds = None if ref.dataref_id not in datastores else Datastore(workspace = ws, name = ref.dataref_id)
             # If DS exists and isn't mapped to the right place
             if ds:
@@ -76,7 +76,7 @@ def create_and_attach_file_storage(cfg, ws):
                 log.info("File Share '%s' on storage account '%s' already existed.", ref.remoteFileShare, ref.storageAccountName)
             # Get most recent list of datastores linked to current workspace
             datastores = ws.datastores()
-            # Validate if share_ds is created
+            # Validate if ds is created
             ds = None if ref.dataref_id not in datastores else Datastore(workspace = ws, name = ref.dataref_id)
             # Register the DS to the workspace
             if ds:
@@ -109,22 +109,24 @@ def upload_files_to_azure(cfg, ws):
     for ref in cfg.DataReference.localDirectoryBlobList:
         uploadContentBeforeRun = ref.uploadContentBeforeRun
         if uploadContentBeforeRun:
+            ds_ref_id = ref.dataref_id
             overwriteOnUpload = ref.overwriteOnUpload
             remoteBlobContainer = ref.remoteBlobContainer
-            localDirectoryName  = ref.localDirectoryName
-            remoteMountPath = ref.remoteMountPath
-            ds = Datastore(workspace = ws, name = remoteBlobContainer)
-            ds.upload(src_dir=localDirectoryName, target_path=remoteMountPath, overwrite=overwriteOnUpload, show_progress=True)
+            localDirectoryPath  = ref.localDirectoryPath
+            remoteDirectoryPath = ref.remoteDirectoryPath
+            ds = Datastore(workspace = ws, name = ds_ref_id)
+            ds.upload(src_dir=localDirectoryPath, target_path=remoteDirectoryPath, overwrite=overwriteOnUpload, show_progress=True)
 
     for ref in cfg.DataReference.localDirectoryFilesList:
         uploadContentBeforeRun = ref.uploadContentBeforeRun
         if uploadContentBeforeRun:
+            ds_ref_id = ref.dataref_id
             overwriteOnUpload = ref.overwriteOnUpload
             remoteFileShare = ref.remoteFileShare
-            localDirectoryName = ref.localDirectoryName
-            remoteMountPath = ref.remoteMountPath
-            ds = Datastore(workspace = ws, name = remoteFileShare)
-            ds.upload(src_dir = localDirectoryName, target_path=remoteMountPath, overwrite=overwriteOnUpload, show_progress=True)
+            localDirectoryPath = ref.localDirectoryPath
+            remoteDirectoryPath = ref.remoteDirectoryPath
+            ds = Datastore(workspace = ws, name = ds_ref_id)
+            ds.upload(src_dir = localDirectoryPath, target_path=remoteDirectoryPath, overwrite=overwriteOnUpload, show_progress=True)
 
 def create_aml_workspace(cfg):
     """ Creates the AML workspace if it doesn't exist. If it does

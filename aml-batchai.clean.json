@@ -62,29 +62,29 @@
     "localDirectoryBlob":[
       {
         "dataref_id" : "dataset",
-        "localDirectoryName": "./dataset/local/dataset",
-        "remoteMountPath": "mydataset",
+        "storageAccountName": "...",
+        "remoteBlobContainer" : "...",
+        "storageAccountKey": "...",
+        "localDirectoryPath": "./dataset/local/dataset",
+        "remoteDirectoryPath": "mydataset",
         "downloadToComputeNodeBeforeExecution" : "True",
-        "remoteBlobContainer" : "tfdatasetsblob",
         "uploadContentBeforeRun" : "False",
         "overwriteOnUpload" : "False",
-        "downloadContentAfterRun" : "False",
-        "storageAccountName": "...",
-        "storageAccountKey": "..."
+        "downloadContentAfterRun" : "False"
       }
     ],
     "localDirectoryFiles":[
       {
         "dataref_id" : "outputs",
-        "localDirectoryName": "./dataset/results",
-        "remoteMountPath": "outputs",
+        "storageAccountName": "...",
+        "remoteFileShare": "...",
+        "storageAccountKey": "...",
+        "localDirectoryPath": "./dataset/results",
+        "remoteDirectoryPath": "outputs",
         "downloadToComputeNodeBeforeExecution" : "False",
-        "remoteFileShare": "tfmodel",
         "uploadContentBeforeRun" : "False",
         "overwriteOnUpload" : "True",
-        "downloadContentAfterRun" : "True",
-        "storageAccountName": "...",
-        "storageAccountKey": "..."
+        "downloadContentAfterRun" : "True"
       }
     ]
   }

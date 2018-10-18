@@ -105,8 +105,8 @@ class AMLConfiguration:
                 for ref in dataReference['localDirectoryBlob']:
                     localDirectoryBlobList.append(self.__AMLBlobDataRef(
                         dataref_id = ref['dataref_id'],
-                        localDirectoryName = ref['localDirectoryName'],
-                        remoteMountPath = ref['remoteMountPath'],
+                        localDirectoryPath = ref['localDirectoryPath'],
+                        remoteDirectoryPath = ref['remoteDirectoryPath'],
                         downloadToComputeNodeBeforeExecution = ref['downloadToComputeNodeBeforeExecution'].upper() == "TRUE",
                         remoteBlobContainer = ref['remoteBlobContainer'],
                         uploadContentBeforeRun = ref['uploadContentBeforeRun'].upper() == "TRUE",
@@ -123,8 +123,8 @@ class AMLConfiguration:
                 for ref in dataReference['localDirectoryFiles']:
                     localDirectoryFilesList.append(self.__AMLFilesDataRef(
                         dataref_id = ref['dataref_id'],
-                        localDirectoryName = ref['localDirectoryName'],
-                        remoteMountPath = ref['remoteMountPath'],
+                        localDirectoryPath = ref['localDirectoryPath'],
+                        remoteDirectoryPath = ref['remoteDirectoryPath'],
                         downloadToComputeNodeBeforeExecution = ref['downloadToComputeNodeBeforeExecution'].upper() == "TRUE",
                         remoteFileShare = ref['remoteFileShare'],
                         uploadContentBeforeRun = ref['uploadContentBeforeRun'].upper() == "TRUE",
@@ -254,7 +254,8 @@ class AMLConfiguration:
 
             def _doctor_script_parameters_for_datastore(self, ws, cfg):
                 # Find parameters to be doctored
-                # Create a k-v list of datareferences in the cfg object
+                # Create a k-v list of datareferences in the cfg object (key) versus if the data
+                # is to be downloaded to node (value)
                 datarefs = {}
                 for blobref in cfg.DataReference.localDirectoryBlobList:
                     datarefs[blobref.dataref_id] = blobref.downloadToComputeNodeBeforeExecution
@@ -279,8 +280,8 @@ class AMLConfiguration:
     class __AMLBlobDataRef(object):
         def __init__(self, **kwargs):
             self.dataref_id = kwargs.get('dataref_id',None)
-            self.localDirectoryName = kwargs.get('localDirectoryName', None)
-            self.remoteMountPath = kwargs.get('remoteMountPath', None)
+            self.localDirectoryPath = kwargs.get('localDirectoryPath', None)
+            self.remoteDirectoryPath = kwargs.get('remoteDirectoryPath', None)
             self.downloadToComputeNodeBeforeExecution = kwargs.get('downloadToComputeNodeBeforeExecution', None)
             self.remoteBlobContainer = kwargs.get('remoteBlobContainer', None)
             self.uploadContentBeforeRun = kwargs.get('uploadContentBeforeRun', False)
@@ -292,8 +293,8 @@ class AMLConfiguration:
     class __AMLFilesDataRef(object):
         def __init__(self, **kwargs):
             self.dataref_id = kwargs.get('dataref_id',None)
-            self.localDirectoryName = kwargs.get('localDirectoryName', None)
-            self.remoteMountPath = kwargs.get('remoteMountPath', None)
+            self.localDirectoryPath = kwargs.get('localDirectoryPath', None)
+            self.remoteDirectoryPath = kwargs.get('remoteDirectoryPath', None)
             self.downloadToComputeNodeBeforeExecution = kwargs.get('downloadToComputeNodeBeforeExecution', None)
             self.remoteFileShare = kwargs.get('remoteFileShare', None)
             self.uploadContentBeforeRun = kwargs.get('uploadContentBeforeRun', False)
