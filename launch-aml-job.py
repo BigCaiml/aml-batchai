@@ -141,8 +141,8 @@ def create_aml_workspace(cfg):
             log.info('  Subscription id: ' + ws.subscription_id)
             log.info('  Resource group: ' + ws.resource_group)
         else:
-            log.info('Workspace found ({}), but not the same as in the JSON config file ({}). Please delete config folder (aml_config) and restart.'.format(ws.name, cfg.AMLConfig.workspace))
-            return
+            log.error('Workspace found ({}), but not the same as in the JSON config file ({}). Please delete config folder (aml_config) and restart.'.format(ws.name, cfg.AMLConfig.workspace))
+            exit(-2)
     except:
         log.info('Unable to find AML config files in (aml_config) - attempting to Creating them.')
         try:
@@ -158,11 +158,11 @@ def create_aml_workspace(cfg):
             ws.get_details()
             ws.write_config()
         except Exception as exc:
-            log.info('Unable to create the workspace on Azure. Error Message : ' + str(exc))
-            return
+            log.error('Unable to create the workspace on Azure. Error Message : ' + str(exc))
+            exit(-2)
     return ws
 
-def create_compute_target(cfg, ws):
+def create_aml_compute_target_batchai(cfg, ws):
     """
     input : 
         ws : definition :  workspace 
@@ -200,10 +200,10 @@ def create_aml_experiment(cfg, ws):
     output : Experiment from azureml.core.experiment
     """
     try:
-        exp = Experiment(workspace = ws, name = cfg.AMLConfig.experimentation + cfg.JobProperties.jobEstimator) #lazy call - experiment created upon call f it
+        exp = Experiment(workspace = ws, name = cfg.AMLConfig.experimentation + "-" + cfg.JobProperties.jobNamePrefix + time.strftime("%Y%m%d-%H%M%S")) #lazy call - experiment created upon call f it
     except Exception as exc:
-        log.info('Problem at Experiment object creation. Error = {}'.format(exc))
-        return
+        log.error('Problem at Experiment object creation. Error = {}'.format(exc))
+        exit(-2)
     return exp
 
 def main(job_profile_file):
@@ -232,7 +232,7 @@ def main(job_profile_file):
     exp = create_aml_experiment(cfg, ws)
 
     # Create or acquire the compute target
-    ct = create_compute_target(cfg, ws)
+    ct = create_aml_compute_target_batchai(cfg, ws)
 
     # Create the estimator (job prereq)
     estimator = cfg.JobProperties.jobEstimator.getAMLTensorFlowEstimator(ct, ws, cfg)

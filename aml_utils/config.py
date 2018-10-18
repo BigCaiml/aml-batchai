@@ -272,7 +272,7 @@ class AMLConfiguration:
                         dataref_id = value.split('/')[0][2:]
                         relative_path_on_compute = self._script_params[key][2+len(dataref_id)+1:] # Find the extra (after the / if there is one )
                         ds = datastores[dataref_id]
-                        dr = ds.as_download() if datarefs[dataref_id] else ds.as_upload() #as_mount() if self._ ._data_references['downloadToComputeNodeBeforeExecution'] = True else ds.as_download()
+                        dr = ds.as_download() if datarefs[dataref_id] else ds.as_mount() #as_mount() if self._ ._data_references['downloadToComputeNodeBeforeExecution'] = True else ds.as_download()
                         dr.path_on_datastore = relative_path_on_compute if len(relative_path_on_compute) > 0 else None
                         self._script_params[key] = dr 
 
